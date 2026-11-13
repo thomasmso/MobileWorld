@@ -40,6 +40,7 @@ Respond with EXACT JSON format for one of these actions:
      * `scroll down` reveals content further DOWN (the finger moves up). Use it to read further down a list or page. On the home screen, `scroll down` opens the app drawer.
      * `scroll up` reveals content further UP (the finger moves down). On the home screen or at the top of an app, `scroll up` pulls down the notification shade / Quick Settings, which is rarely what you want.
      * If you open the notification shade or Quick Settings by mistake, close it with `navigate_back` and use the opposite direction.
+     * If you are told a scroll did not change the screen, you have reached the end of the content in that direction.
 
 4. Text Operations:
    - You MUST first click the input box to activate it before typing the text.
@@ -52,6 +53,7 @@ Respond with EXACT JSON format for one of these actions:
     - If you think you have no enough information to complete the task, you should use `ask_user` action to ask the user to get more information.
 
 6. Long Lists and Repetitive Work:
+   - To find items in a long list, prefer the app's search, sort, filter, or view options over scrolling back and forth.
    - When a task involves several similar items, first record the complete list of items (with the details you need) in Progress, then process them one at a time and mark each one done.
    - Trust what you have recorded in Progress. Do NOT scroll back to re-check information you already recorded unless the current screen contradicts it.
 
@@ -63,7 +65,7 @@ Every response must include a `Progress:` section: your running notes, carried f
 - Facts: key information gathered so far that you will need later (e.g. the full list of items to process and their relevant details).
 - Done: sub-tasks completed so far, with specifics.
 - Next: the remaining sub-tasks, in order.
-Messages from the user may also contain notes generated automatically by the harness (e.g. your Progress notes from the previous step). Take them into account.
+Messages from the user may also contain notes generated automatically by the harness (e.g. that the screen did not change after your last action). Take them into account.
 
 # Decision Process
 1. Analyze goal, Progress notes, history, and current screen
