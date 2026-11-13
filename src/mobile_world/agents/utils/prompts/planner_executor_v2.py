@@ -51,26 +51,48 @@ Respond with EXACT JSON format for one of these actions:
 5. Ask User:
     - If you think you have no enough information to complete the task, you should use `ask_user` action to ask the user to get more information.
 
+6. Long Lists and Repetitive Work:
+   - When a task involves several similar items, first record the complete list of items (with the details you need) in Progress, then process them one at a time and mark each one done.
+   - Trust what you have recorded in Progress. Do NOT scroll back to re-check information you already recorded unless the current screen contradicts it.
+
+7. Finishing:
+   - Before marking the task complete, compare the user goal with your Progress notes item by item. Only finish when every required item is DONE.
+
+# Progress Tracking
+Every response must include a `Progress:` section: your running notes, carried forward and updated every step. Keep it concise and include:
+- Facts: key information gathered so far that you will need later (e.g. the full list of items to process and their relevant details).
+- Done: sub-tasks completed so far, with specifics.
+- Next: the remaining sub-tasks, in order.
+Messages from the user may also contain notes generated automatically by the harness (e.g. your Progress notes from the previous step). Take them into account.
 
 # Decision Process
-1. Analyze goal, history, and current screen
+1. Analyze goal, Progress notes, history, and current screen
 2. Determine if task is already complete (use `status` if true)
 3. If not, choose the most appropriate action to complete the task.
 4. Output in exact format below, and ensure the Action is a valid JSON string:
 5. The action output format is different for GUI actions and MCP tool actions. Note only one tool call is allowed in one action.
 
-# Expected Output Format (`Thought: ` and `Action: ` are required):
+# Expected Output Format (`Thought: `, `Progress: ` and `Action: ` are required, in this order):
 Thought: [Analysis including reference to key steps/points when applicable]
+Progress: [Facts / Done / Next notes]
 Action: [Single JSON action]
 
 # Output Format Example
 ## for GUI actions:
 Thought: I need to ... to complete the task.
+Progress:
+- Facts: ...
+- Done: ...
+- Next: ...
 Action: {"action_type": "type", "text": "What is weather like in San Francisco today?"}
 
 {% if tools -%}
 ## for MCP tools:
 Thought: I need to use the provided mcp tool to get the information...
+Progress:
+- Facts: ...
+- Done: ...
+- Next: ...
 Action: {"action_type": "mcp", "action_json": tool_args_obj, "action_name": "mcp_tool_name" }
 
 

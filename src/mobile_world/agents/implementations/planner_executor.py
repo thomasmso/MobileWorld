@@ -187,7 +187,19 @@ class PlannerExecutorAgentMCP(MCPAgent):
         # Reset history when initializing with new instruction
         self.reset()
 
-    def _get_user_message(self, img_data, tool_call_res, ask_user_response_res) -> dict:
+    def _observation_feedback(self, observation: dict[str, Any]) -> str | None:
+        """Text to attach to the current observation. Subclasses may override."""
+        return None
+
+    def _get_user_message(
+        self, img_data, tool_call_res, ask_user_response_res, feedback: str | None = None
+    ) -> dict:
+        user_message = self._build_user_message(img_data, tool_call_res, ask_user_response_res)
+        if feedback:
+            user_message["content"].append({"type": "text", "text": feedback})
+        return user_message
+
+    def _build_user_message(self, img_data, tool_call_res, ask_user_response_res) -> dict:
         user_message = None
         if tool_call_res is not None:
             user_message = {
@@ -233,7 +245,7 @@ class PlannerExecutorAgentMCP(MCPAgent):
                 else:
                     messages[reverse_i]["content"] = [
                         {"type": "text", "text": "(Previous turn, screen not shown)"}
-                    ]
+                    ] + messages[reverse_i]["content"][1:]
         return messages
 
     def predict(
@@ -254,7 +266,9 @@ class PlannerExecutorAgentMCP(MCPAgent):
         tool_call = observation.get("tool_call", None)
         ask_user_response = observation.get("ask_user_response", None)
 
-        self.history_images.append((obs_image, tool_call, ask_user_response))
+        feedback = self._observation_feedback(observation)
+
+        self.history_images.append((obs_image, tool_call, ask_user_response, feedback))
 
         logger.debug(f"Current history images count: {len(self.history_images)}")
         logger.debug(f"Current history responses count: {len(self.history_responses)}")
@@ -268,16 +282,10 @@ class PlannerExecutorAgentMCP(MCPAgent):
                     tools="\n".join([json.dumps(tool, ensure_ascii=False) for tool in self.tools]),
                 ),
             },
-            self._get_user_message(
-                self.history_images[0][0], self.history_images[0][1], self.history_images[0][2]
-            ),
+            self._get_user_message(*self.history_images[0]),
         ]
         for i, history_resp in enumerate(self.history_responses):
-            history_img_data, tool_call_res, ask_user_response_res = self.history_images[i + 1]
-
-            user_message = self._get_user_message(
-                history_img_data, tool_call_res, ask_user_response_res
-            )
+            user_message = self._get_user_message(*self.history_images[i + 1])
 
             response_message = {
                 "role": "assistant",
