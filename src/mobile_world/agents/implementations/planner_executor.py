@@ -359,15 +359,14 @@ class PlannerExecutorAgentMCP(MCPAgent):
                     if hasattr(exec_action, "model_dump")
                     else exec_action.dict()
                 )
-                json_action_dict = exec_action_dict
-                logger.info(f"Executor succeeded. Using its precise action: {json_action_dict}")
+                logger.info(f"Executor succeeded. Using its precise action: {exec_action_dict}")
             else:
-                logger.warning(f"Executor failed. Using planner's action: {json_action_dict}")
-                json_action_dict = {
+                logger.warning(f"Executor failed. Planner's action was: {json_action_dict}")
+                exec_action_dict = {
                     "action_type": "unknown",
                     "text": f"Executor failed for instruction: '{executor_instruction}'. The error of prediction is {prediction}.",
                 }
-            return json_action_dict
+            return exec_action_dict
 
         if (
             json_action_dict["action_type"] in ["click", "long_press", "double_tap", "drag"]
