@@ -1,3 +1,4 @@
+import os
 import re
 import time
 import traceback
@@ -57,7 +58,7 @@ class UIINSGroundingAgent(BaseAgent):
         self.runtime_conf = runtime_conf
         self.vlm = OpenAI(
             base_url=self.llm_base_url,
-            api_key="empty",
+            api_key=os.getenv("EXECUTOR_API_KEY", "empty"),
             timeout=60.0,
             max_retries=3,
         )
