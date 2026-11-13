@@ -2,6 +2,7 @@ from .gelab import *
 from .general_e2e import *
 from .mai_ui import *
 from .planner_executor import *
+from .planner_executor_v2 import *
 from .qwen3vl import *
 from .seed import *
 from .ui_venus import *

@@ -16,6 +16,7 @@ from mobile_world.agents.implementations.general_e2e_agent import GeneralE2EAgen
 from mobile_world.agents.implementations.mai_ui_agent import MAIUINaivigationAgent
 from mobile_world.agents.implementations.memgui_agent import MemGUIAgent
 from mobile_world.agents.implementations.planner_executor import PlannerExecutorAgentMCP
+from mobile_world.agents.implementations.planner_executor_v2 import PlannerExecutorV2AgentMCP
 from mobile_world.agents.implementations.qwen3vl import Qwen3VLAgentMCP
 from mobile_world.agents.implementations.seed_agent import SeedAgent
 from mobile_world.agents.implementations.ui_venus_agent import VenusNaviAgent
@@ -27,6 +28,9 @@ AGENT_CONFIGS = {
     },
     "planner_executor": {
         "class": PlannerExecutorAgentMCP,
+    },
+    "planner_executor_v2": {
+        "class": PlannerExecutorV2AgentMCP,
     },
     "mai_ui_agent": {
         "class": MAIUINaivigationAgent,

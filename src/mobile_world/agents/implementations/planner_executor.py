@@ -123,6 +123,8 @@ def parsing_planner_response_to_android_world_env_action(plan_action: str) -> di
 
 
 class PlannerExecutorAgentMCP(MCPAgent):
+    prompt_template = PLANNER_EXECUTOR_PROMPT_TEMPLATE
+
     def __init__(
         self,
         model_name: str,
@@ -261,7 +263,7 @@ class PlannerExecutorAgentMCP(MCPAgent):
         messages = [
             {
                 "role": "system",
-                "content": PLANNER_EXECUTOR_PROMPT_TEMPLATE.render(
+                "content": self.prompt_template.render(
                     goal=self.instruction,
                     tools="\n".join([json.dumps(tool, ensure_ascii=False) for tool in self.tools]),
                 ),
